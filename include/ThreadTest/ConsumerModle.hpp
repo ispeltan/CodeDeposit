@@ -19,9 +19,9 @@ public:
                 while (true) {
                     std::unique_lock<std::mutex> lock(mux_);
                     cv_.wait(lock, [&]()->bool {
-                        return !messages_.empty() || stop_;
+                        return !messages_.empty() || stop_.load();
                     });
-                    if (stop_) {
+                    if (stop_.load()) {
                         break;
                     }
 
@@ -49,8 +49,7 @@ public:
         cv_.notify_all();
     }
     void Stop() {
-        std::unique_lock<std::mutex> lock(mux_);
-        stop_ = true;
+        stop_.store(true);
         cv_.notify_all();
     }
 
@@ -58,6 +57,6 @@ private:
     std::list<std::thread> threads_;
     std::mutex mux_;
     std::condition_variable cv_;
-    bool stop_ = false;
+    std::atomic<bool> stop_ = false;
     std::queue<std::function<void()>> messages_;
 };
