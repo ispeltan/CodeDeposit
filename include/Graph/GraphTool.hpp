@@ -1,0 +1,8 @@
+//
+// Created by tanpe on 2023/4/2.
+//
+
+#ifndef GRAPHTEST_GRAPHTOOL_HPP
+#define GRAPHTEST_GRAPHTOOL_HPP
+
+#endif //GRAPHTEST_GRAPHTOOL_HPP
