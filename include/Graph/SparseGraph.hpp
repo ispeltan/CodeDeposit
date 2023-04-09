@@ -6,11 +6,12 @@
 
 #include <vector>
 #include <Graph/Graph.hpp>
+#include <sstream>
 
 // 稀松图-一般使用邻接表表示
 class SparseGraph : public Graph {
 public:
-    SparseGraph(int n, bool is_directed): Graph(is_directed) {
+    SparseGraph(int n, bool is_directed): Graph(n, is_directed) {
         g_.assign(n, {});
     }
 
@@ -53,8 +54,32 @@ public:
         return false;
     }
 
+    virtual std::string Show() const {
+        std::stringstream ss{};
+        int i = 0;
+        for (const auto& it: g_) {
+            ss << "node[" << i++ << "] ";
+            for (const auto& has: it) {
+                ss << has << " ";
+            }
+            ss << std::endl;
+        }
+        return ss.str();
+    }
+    virtual std::string DepthFirstTraverse()  {
+        std::stringstream ss{};
+        for (int i = 0; i < g_.size(); ++i) {
+            ss << DoDFS(i);
+        }
+        ss << std::endl;
+        return ss.str();
+    }
+
+
+
     // 迭代器
     class Iterator {
+    public:
         // 构造函数传入：图和节点
         Iterator(SparseGraph& graph, int v): graph_(graph) {
             assert(v >= 0 && v < graph.g_.size());
@@ -78,7 +103,7 @@ public:
         }
 
         bool end() {
-            return index_ >= graph_.g_.size();
+            return index_ >= graph_.g_[v_].size();
         }
 
     private:
@@ -86,6 +111,20 @@ public:
         int v_;
         int index_;
     };
+
+private:
+    std::string DoDFS(int index) {
+        std::stringstream ss{};
+        for (int i = 0; i < g_[index].size(); ++i) {
+            if (!visited_[g_[index][i]]) {
+                ss << g_[index][i] << " ";
+                visited_[g_[index][i]] = true;
+                ss << DoDFS(g_[index][i]);
+            }
+        }
+        return ss.str();
+    }
+
 
 
 private:

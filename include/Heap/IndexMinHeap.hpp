@@ -9,15 +9,15 @@
 
 // 索引最大堆
 template<class T>
-class IndexMaxHeap {
+class IndexMinHeap {
 public:
 
 
     // 不指定索引堆大小的堆
-    IndexMaxHeap() = default;
+    IndexMinHeap() = default;
 
     // 指定索引堆大小的堆
-    IndexMaxHeap(int n) {
+    IndexMinHeap(int n) {
         data_.assign(n, T());
         reverses_.assign(n, -1);
     }
@@ -45,7 +45,7 @@ public:
     }
 
     // 获取根节点的索引值
-    int ExtractMaxIndex() {
+    int ExtractMinIndex() {
         assert(!Empty());
         int ret = indexes_[0];
         std::swap(indexes_[0], indexes_[indexes_.size() - 1]);
@@ -58,7 +58,7 @@ public:
     }
 
     // 获取根节点的数据
-    T ExtractMaxItem() {
+    T ExtractMinItem() {
         assert(!Empty());
         T ret = data_[indexes_[0]];
         std::swap(indexes_[0], indexes_[indexes_.size() - 1]);
@@ -142,11 +142,11 @@ private:
                 break;
             }
             if (right_index < indexes_.size()) {
-                if (data_[indexes_[right_index]] > data_[indexes_[left_index]]) {
+                if (data_[indexes_[right_index]] < data_[indexes_[left_index]]) {
                     cmp_index = right_index;
                 }
             }
-            if (data_[indexes_[index]] < data_[indexes_[cmp_index]]) {
+            if (data_[indexes_[index]] > data_[indexes_[cmp_index]]) {
                 std::swap(indexes_[cmp_index], indexes_[index]);
                 reverses_[indexes_[cmp_index]] = cmp_index;
                 reverses_[indexes_[index]] = index;
@@ -160,7 +160,7 @@ private:
     void ShiftUp(int index) {
         while (index > 0) {
             auto parent_index = (index - 1) / 2;
-            if (data_[indexes_[parent_index]] < data_[indexes_[index]]) {
+            if (data_[indexes_[parent_index]] > data_[indexes_[index]]) {
                 std::swap(indexes_[parent_index], indexes_[index]);
                 reverses_[indexes_[parent_index]] = parent_index;
                 reverses_[indexes_[index]] = index;
