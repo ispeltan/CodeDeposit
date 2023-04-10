@@ -7,7 +7,7 @@
 #include <cassert>
 #include <sstream>
 
-// 索引最大堆
+// 索引最小堆
 template<class T>
 class IndexMinHeap {
 public:
